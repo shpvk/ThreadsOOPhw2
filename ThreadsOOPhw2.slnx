@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="ThreadsOOPhw2/ThreadsOOPhw2.vcxproj" />
+  <Project Path="ThreadsOOPhw2/ThreadsOOPhw2.vcxproj" Id="4442d8ec-84b8-4ea9-b4d1-b0b522d36ed6" />
 </Solution>

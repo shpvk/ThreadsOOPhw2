@@ -5,9 +5,6 @@
 #include <mutex>
 
 using namespace std;
-
-
-
 mutex flag;
 
 class WordCounter
@@ -27,44 +24,33 @@ public:
 	{
 		flag.lock();
 		ifstream file(filename);
-
-		while (!file.eof())
+		string line;
+		while (getline(file, line))
 		{
-			string buff;
-			getline(file, buff);
 			lineCount++;
-			cout << buff << endl;
-		}
-		flag.unlock();
+			charCount += int(line.size());
 
-		
-
-		flag.lock();
-		
-		char c;
-		while (file.get(c))
-		{
-			charCount++;
-		};
-
-		flag.unlock();
-		
-		flag.lock();
-		while (file.get(c))
-		{
-			if (c == ' ')
+			bool isWord = false;
+			for (int i = 0; i < line.size(); ++i)
 			{
-				wordCount++;
+				if (!isspace(line[i]))
+				{
+					if (!isWord)
+					{
+						wordCount++;
+						isWord = true;
+					}
+				}
+				else
+				{
+					isWord = false;
+				}
 			}
+			cout << line << endl;
 		}
 		flag.unlock();
-	}
-
-	void Save(string filename)
-	{
 
 	}
-
 	int GetCharCount()
 	{
 		return this->charCount;
@@ -92,14 +78,11 @@ private:
 public:
 	CreateFile() :
 		filename("filename.txt"),
-		file(filename, ios::app)
-	{
-
-	}
+		file(filename, ios::app) { }
 	
 	void Write(string text)
 	{
-		file << text;
+		file << text << endl;
 	}
 
 	string GetFileName()
@@ -119,14 +102,11 @@ int main()
 	file.Write(text);
 
 	WordCounter reader;
-	thread t1(WordCounter::Read, &reader, file.GetFileName());
+	thread t1(&WordCounter::Read, &reader, file.GetFileName());
 	
 	t1.join();
-
-
 
 	cout << "Char count = " << reader.GetCharCount() << endl;
 	cout << "Line count = " << reader.GetLineCount() << endl;
 	cout << "Word count = " << reader.GetWordCount() << endl;
-	//thread read(reader.Read(obj.GetFileName()));
 }
